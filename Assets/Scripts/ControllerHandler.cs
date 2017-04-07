@@ -49,7 +49,6 @@ public class ControllerHandler : MonoBehaviour
         gripped = controller.GetPressDown(grip);
         
         CirclePadValue = controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad);
-        Debug.Log(CirclePadValue);
     }
 
     void OnDrawGizmos()
