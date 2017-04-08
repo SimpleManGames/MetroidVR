@@ -1,54 +1,92 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR;
 
 public class ControllerHandler : MonoBehaviour
 {
-    public bool triggerButtonDown = false;
-    public bool dLeftDown = false;
-    public bool dRightDown = false;
-    public bool gripped = false;
+    private EVRButtonId triggerButton = EVRButtonId.k_EButton_SteamVR_Trigger;
+    private EVRButtonId dLeft = EVRButtonId.k_EButton_DPad_Left;
+    private EVRButtonId dRight = EVRButtonId.k_EButton_DPad_Right;
+    private EVRButtonId grip = EVRButtonId.k_EButton_Grip;
 
-    private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
-    private Valve.VR.EVRButtonId dLeft = Valve.VR.EVRButtonId.k_EButton_DPad_Left;
-    private Valve.VR.EVRButtonId dRight = Valve.VR.EVRButtonId.k_EButton_DPad_Right;
-    private Valve.VR.EVRButtonId grip = Valve.VR.EVRButtonId.k_EButton_Grip;
+    #region Properties
 
-    float triggerBuffer = .5f;
-    public bool canTrigger;
-
-    private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
-    private SteamVR_TrackedObject trackedObj;
-
-    public Vector2 CirclePadValue;
-
-    void Start()
+    private bool _triggerButtonDown = false;
+    public bool TriggerButtonDown
     {
-
-        trackedObj = GetComponent<SteamVR_TrackedObject>();
+        get { return _triggerButtonDown; }
+        private set { _triggerButtonDown = value; }
     }
+
+    private bool _dLeftDown = false;
+    public bool DLeftDown
+    {
+        get { return _dLeftDown; }
+        set { _dLeftDown = value; }
+    }
+
+    private bool _dRightDown = false;
+    public bool DRightDown
+    {
+        get { return _dRightDown; }
+        set { _dRightDown = value; }
+    }
+
+    private bool _gripped = false;
+    public bool GripButtonDown
+    {
+        get { return _gripped; }
+        set { _gripped = value; }
+    }
+
+    private SteamVR_TrackedObject _trackedObject;
+    private SteamVR_Controller.Device Controller
+    {
+        get
+        {
+            if (_trackedObject == null)
+                _trackedObject = GetComponent<SteamVR_TrackedObject>();
+
+            return SteamVR_Controller.Input((int)_trackedObject.index);
+        }
+    }
+
+    private Vector2 circlePadValue;
+    public Vector2 CirclePadValue
+    {
+        get { return circlePadValue; }
+        private set { circlePadValue = value; }
+    }
+
+    private bool canTrigger;
+    public bool CanTrigger
+    {
+        get { return canTrigger; }
+        set { canTrigger = value; }
+    }
+
+    #endregion
+
+    [SerializeField]
+    private float _triggerInputDelay = .5f;
 
     void Update()
     {
-
-        triggerBuffer -= Time.deltaTime;
-        if (triggerBuffer <= 0)
-        {
-            canTrigger = true;
-        }
-        else { canTrigger = false; }
-        //lr.SetPositions(transform.position, po.objToPlace.transform.position);
-        if (controller == null)
+        _triggerInputDelay -= Time.deltaTime;
+         CanTrigger = _triggerInputDelay <= 0;
+        
+        if (Controller == null)
         {
             Debug.Log("Controller not initialized");
             return;
         }
-        triggerButtonDown = controller.GetPressDown(triggerButton);
-        dLeftDown = controller.GetPress(dLeft);
-        dRightDown = controller.GetPress(dRight);
-        gripped = controller.GetPressDown(grip);
-        
-        CirclePadValue = controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad);
+
+        TriggerButtonDown = Controller.GetPressDown(triggerButton);
+        DLeftDown = Controller.GetPress(dLeft);
+        DRightDown = Controller.GetPress(dRight);
+        GripButtonDown = Controller.GetPressDown(grip);
+        CirclePadValue = Controller.GetAxis(EVRButtonId.k_EButton_SteamVR_Touchpad);
     }
 
     void OnDrawGizmos()

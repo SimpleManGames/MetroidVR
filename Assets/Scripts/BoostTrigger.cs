@@ -138,13 +138,13 @@ public class BoostTrigger : MonoBehaviour
         Vector3 rayCastPosition = new Vector3(CameraTransform.position.x, CameraTransform.position.y - skinWidth, CameraTransform.position.z);
         Ray ray = new Ray(rayCastPosition, Vector3.down);
 
-        Debug.DrawRay(ray.origin, ray.direction);
+        Debug.DrawRay(ray.origin, ray.direction * 100);
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 100f))
         {
             float hitDist = rayCastPosition.y - hit.point.y;
-            if (hitDist > .1f && !collisionInfo.climbingSlope)
+            if (hitDist > 0f /*&& !collisionInfo.climbingSlope*/)
             {
                 var mesh = CameraRigTransform.GetComponent<MeshFilter>().mesh;
 
@@ -156,7 +156,7 @@ public class BoostTrigger : MonoBehaviour
                 debugposition = CameraRigTransform.position + ave;
 
                 CameraPivot.position = new Vector3(CameraPivot.position.x, hit.point.y, CameraPivot.position.z);
-                RayCastDirectionPosition.position = new Vector3(RayCastDirectionPosition.position.x, hit.point.y, RayCastDirectionPosition.position.z);
+                RayCastDirectionPosition.position = new Vector3(RayCastDirectionPosition.position.x, CameraPivot.position.y, RayCastDirectionPosition.position.z);
             }
         }
     }
