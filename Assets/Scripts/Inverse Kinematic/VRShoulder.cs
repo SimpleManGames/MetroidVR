@@ -15,15 +15,12 @@ public class VRShoulder : MonoBehaviour
     void Update()
     {
         averageHandPosition = (LeftHand.position + RightHand.position) / 2;
-        averageHandPosition = Vector3.Normalize(averageHandPosition);
         averageHandPosition.y = 0f;
 
-        cameraForwardPosition = CameraTransform.forward;
-        cameraForwardPosition = Vector3.Normalize(cameraForwardPosition);
+        cameraForwardPosition = CameraTransform.position + CameraTransform.forward;
         cameraForwardPosition.y = 0f;
 
         handCameraAverage = (averageHandPosition + cameraForwardPosition) / 2;
-        handCameraAverage = Vector3.Normalize(handCameraAverage);
         handCameraAverage.y = transform.position.y;
 
         transform.LookAt(handCameraAverage);
