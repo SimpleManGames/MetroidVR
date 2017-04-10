@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Valve.VR;
 
 public class ControllerHandler : MonoBehaviour
@@ -48,6 +46,9 @@ public class ControllerHandler : MonoBehaviour
             if (_trackedObject == null)
                 _trackedObject = GetComponent<SteamVR_TrackedObject>();
 
+            if (_trackedObject == null)
+                Debug.Log("Controller not initialized");
+
             return SteamVR_Controller.Input((int)_trackedObject.index);
         }
     }
@@ -74,13 +75,7 @@ public class ControllerHandler : MonoBehaviour
     void Update()
     {
         _triggerInputDelay -= Time.deltaTime;
-         CanTrigger = _triggerInputDelay <= 0;
-        
-        if (Controller == null)
-        {
-            Debug.Log("Controller not initialized");
-            return;
-        }
+        CanTrigger = _triggerInputDelay <= 0;
 
         TriggerButtonDown = Controller.GetPressDown(triggerButton);
         DLeftDown = Controller.GetPress(dLeft);

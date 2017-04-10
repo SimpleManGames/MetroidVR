@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[ExecuteInEditMode]
 public class VRShoulder : MonoBehaviour
 {
     public Transform CameraTransform;
@@ -15,10 +16,10 @@ public class VRShoulder : MonoBehaviour
     void Update()
     {
         averageHandPosition = (LeftHand.position + RightHand.position) / 2;
-        averageHandPosition.y = 0f;
+        averageHandPosition.y = transform.position.y;
 
         cameraForwardPosition = CameraTransform.position + CameraTransform.forward;
-        cameraForwardPosition.y = 0f;
+        cameraForwardPosition.y = transform.position.y;
 
         handCameraAverage = (averageHandPosition + cameraForwardPosition) / 2;
         handCameraAverage.y = transform.position.y;
@@ -29,12 +30,12 @@ public class VRShoulder : MonoBehaviour
     public void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(averageHandPosition, .1f);
+        Gizmos.DrawSphere(averageHandPosition, .05f);
 
         Gizmos.color = Color.magenta;
-        Gizmos.DrawSphere(cameraForwardPosition, .1f);
+        Gizmos.DrawSphere(cameraForwardPosition, .05f);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(handCameraAverage, .1f);
+        Gizmos.DrawSphere(handCameraAverage, .05f);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[ExecuteInEditMode]
 public class CustomIk : MonoBehaviour
 {
     public Transform target;
