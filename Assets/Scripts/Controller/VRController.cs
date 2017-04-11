@@ -52,19 +52,22 @@ public class VRController : MonoBehaviour
 
         if (LeftHand.CirclePadValue != Vector2.zero)
             Boost();
+
+        HorizontalRaycast();
+
+
+        movementSettings.momentumVector = (RoomScaleTransform.position + DirectionRotationAxis).normalized;
     }
 
     private void Boost()
     {
         Vector3 moveAmount = Vector3.Slerp(RoomScaleTransform.position, RoomScaleTransform.position + DirectionRotationAxis, 1f * movementSettings.boostSpeed * Time.deltaTime);
         moveAmount.y = 0;
-
-        movementSettings.momentumVector = (moveAmount - RoomScaleTransform.position).normalized;  
         RoomScaleTransform.position = moveAmount;
     }
 
     private void HorizontalRaycast() {
-        Debug.DrawRay(CameraPosition.position, CameraPosition.position + movementSettings.momentumVector);
+        Debug.DrawRay(RoomScaleTransform.position, RoomScaleTransform.position + movementSettings.momentumVector);
     }
 
     private void OnDrawGizmos()
