@@ -17,6 +17,9 @@ public class ControllerHandler : MonoBehaviour
         private set { _triggerButtonDown = value; }
     }
 
+    private bool _triggerButtonHeld = false;
+    public bool TriggerButtonHeld { get { return _triggerButtonHeld; } private set { _triggerButtonHeld = value; } }
+
     private bool _dLeftDown = false;
     public bool DLeftDown
     {
@@ -77,6 +80,7 @@ public class ControllerHandler : MonoBehaviour
         _triggerInputDelay -= Time.deltaTime;
         CanTrigger = _triggerInputDelay <= 0;
 
+        TriggerButtonHeld = Controller.GetPress(triggerButton);
         TriggerButtonDown = Controller.GetPressDown(triggerButton);
         DLeftDown = Controller.GetPress(dLeft);
         DRightDown = Controller.GetPress(dRight);
