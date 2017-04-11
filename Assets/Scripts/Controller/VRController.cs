@@ -25,7 +25,9 @@ public class VRController : MonoBehaviour
     private Vector3 DirectionRotationAxis;
 
     public MovementSettings movementSettings;
-    
+
+    public RaycastSettings raycastSettings;
+
     private void Update()
     {
         switch (movementSettings.movementMethod)
@@ -48,13 +50,21 @@ public class VRController : MonoBehaviour
                 break;
         }
 
-        if (LeftHand.CirclePadValue != Vector2.zero && movementSettings.movementMethod != MovementSettings.MovementMethod.LeanSteering)
+        if (LeftHand.CirclePadValue != Vector2.zero)
             Boost();
     }
 
     private void Boost()
     {
-        RoomScaleTransform.position = Vector3.Slerp(RoomScaleTransform.position, RoomScaleTransform.position + DirectionRotationAxis, 1f * movementSettings.BoostSpeed * Time.deltaTime);
+        Vector3 moveAmount = Vector3.Slerp(RoomScaleTransform.position, RoomScaleTransform.position + DirectionRotationAxis, 1f * movementSettings.boostSpeed * Time.deltaTime);
+        moveAmount.y = 0;
+
+        movementSettings.momentumVector = (moveAmount - RoomScaleTransform.position).normalized;  
+        RoomScaleTransform.position = moveAmount;
+    }
+
+    private void HorizontalRaycast() {
+        Debug.DrawRay(CameraPosition.position, CameraPosition.position + movementSettings.momentumVector);
     }
 
     private void OnDrawGizmos()
@@ -71,6 +81,17 @@ public class VRController : MonoBehaviour
     {
         public enum MovementMethod { CameraLook, LeftHandPoint, LeftDPadSteering, LeanSteering }
         public MovementMethod movementMethod;
-        public float BoostSpeed;
+        public float boostSpeed;
+
+        public float maxSlopeAngle;
+
+        [HideInInspector]
+        public Vector3 momentumVector;
+    }
+
+    [System.Serializable]
+    public struct RaycastSettings {
+        public Vector3 rayCastPosition;
+        public float distance;
     }
 }
